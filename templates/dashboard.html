@@ -1,0 +1,48 @@
+{{define "dashboard" -}}
+<section class="dashboard-card" id="dashboard" aria-label="Plant sensor dashboard">
+  <div class="dashboard-topline">
+    <div class="live-label"><span class="status-dot"></span> SENSOR FEED <span class="live-divider">/</span> {{if .Error}}RETRYING{{else}}CONNECTED{{end}}</div>
+    <div class="update-label">UPDATED {{.Updated}}</div>
+  </div>
+  {{if .Error}}<div class="notice" role="status">{{.Error}}</div>{{end}}
+  <div class="metric-grid">
+    <article class="metric-card metric-primary">
+      <div class="metric-label">SOIL SENSOR OUTPUT <span class="metric-symbol">↘</span></div>
+      {{if .Latest}}
+        <div class="metric-value">{{printf "%.0f" .Latest.Value}}<span class="metric-unit">raw</span></div>
+        <div class="metric-caption">Most recent capacitive reading</div>
+      {{else}}
+        <div class="metric-value metric-empty">—</div>
+        <div class="metric-caption">Waiting for the first reading</div>
+      {{end}}
+      <div class="metric-line"><span></span></div>
+    </article>
+    <article class="metric-card">
+      <div class="metric-label">SENSOR TEMPERATURE <span class="metric-symbol">°</span></div>
+      {{if and .Latest .Latest.TempC}}
+        <div class="metric-value">{{printf "%.1f" (deref .Latest.TempC)}}<span class="metric-unit">°C</span></div>
+        <div class="metric-caption">Reported by the sensor board</div>
+      {{else}}
+        <div class="metric-value metric-empty">—</div>
+        <div class="metric-caption">No temperature reading yet</div>
+      {{end}}
+    </article>
+    <article class="metric-card metric-status">
+      <div class="metric-label">SYSTEM STATUS <span class="metric-symbol">✳</span></div>
+      <div class="status-value"><span class="status-dot"></span> MONITORING</div>
+      <div class="metric-caption">Pump control is not connected</div>
+    </article>
+  </div>
+  <div class="chart-panel">
+    <div class="chart-heading">
+      <div><span class="chart-title">RECENT SOIL READINGS</span><span class="chart-subtitle">LAST 24 HOURS · RAW SENSOR VALUE</span></div>
+      <div class="chart-legend"><span></span> MOISTURE SENSOR</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="moisture-chart" role="img" aria-label="Chart of soil sensor readings over the last 24 hours"></canvas>
+      <div class="chart-empty" id="chart-empty" hidden>No readings in the last 24 hours yet.</div>
+    </div>
+  </div>
+  <script id="telemetry-data" type="application/json">{{.Points}}</script>
+</section>
+{{- end}}

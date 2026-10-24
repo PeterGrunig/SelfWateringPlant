@@ -1,0 +1,13 @@
+# Local credentials and runtime configuration
+.env
+firmware/**/secrets.h
+
+# Editor and build output
+.DS_Store
+.idea/
+.vscode/
+*.out
+*.exe
+*.o
+*.a
+/bin/

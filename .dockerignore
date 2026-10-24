@@ -1,0 +1,4 @@
+.git
+.env
+firmware/**/secrets.h
+**/.DS_Store

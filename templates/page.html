@@ -1,0 +1,119 @@
+{{define "page" -}}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f3ed">
+  <meta name="description" content="A connected plant monitor built with an ESP32, capacitive soil sensor, Firebase, and a Go dashboard.">
+  <title>Self Watering Plant — a connected plant monitor</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Self Watering Plant home">
+      <span class="brand-mark" aria-hidden="true">↗</span>
+      <span>FIELD NOTES <span class="brand-divider">/</span> 001</span>
+    </a>
+    <nav class="top-nav" aria-label="Main navigation">
+      <a href="#monitor">Monitor</a>
+      <a href="#build">The build</a>
+      <a class="nav-github" href="https://github.com/PeterGrunig/SelfWateringPlant" target="_blank" rel="noreferrer">View source <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> AN ONGOING HARDWARE PROJECT</p>
+        <h1 id="hero-title">A little more<br><em>in tune</em> with plants.</h1>
+        <p class="hero-intro">A connected planter that listens to the soil, records what it finds, and makes the data easy to explore.</p>
+        <a class="text-link" href="#monitor">Explore the live monitor <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="sun-orbit orbit-one"></div>
+        <div class="sun-orbit orbit-two"></div>
+        <div class="sun"></div>
+        <div class="plant plant-back"><span></span><span></span><span></span></div>
+        <div class="plant plant-front"><span></span><span></span><span></span><span></span></div>
+        <div class="pot"><div class="pot-rim"></div><div class="pot-body"></div><div class="pot-base"></div></div>
+        <div class="art-caption">SOIL / SIGNAL / TIME</div>
+      </div>
+      <div class="hero-footnote"><span>01</span><span>MEASURE FIRST. WATER NEXT.</span><span>ESP32 · SEESAW · FIREBASE</span></div>
+    </section>
+
+    <section class="monitor-section section-wrap" id="monitor">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">THE DATA WINDOW <span class="section-number">01 / 03</span></p>
+          <h2>What the soil<br>is saying.</h2>
+        </div>
+        <p class="section-note">Readings are collected by the ESP32 and stored in Firebase. This dashboard displays the latest sensor output and its recent history.</p>
+      </div>
+      <div id="dashboard-shell">
+        {{template "dashboard" .}}
+      </div>
+      <p class="data-footnote">Moisture is shown as the sensor’s raw capacitive reading. The values need calibration for the specific soil and planter before they can be interpreted as a percentage.</p>
+    </section>
+
+    <section class="build-section section-wrap" id="build">
+      <div class="section-heading build-heading">
+        <div>
+          <p class="eyebrow">HOW IT WORKS <span class="section-number">02 / 03</span></p>
+          <h2>From soil<br>to signal.</h2>
+        </div>
+        <p class="section-note">The current version focuses on dependable sensing and logging. Automatic watering is the next step, once the readings are calibrated and the pump hardware is added.</p>
+      </div>
+      <div class="flow-grid">
+        <article class="flow-card">
+          <span class="flow-index">01</span>
+          <div class="flow-icon sensor-icon" aria-hidden="true"><span></span><span></span><span></span></div>
+          <h3>Sense</h3>
+          <p>A capacitive soil sensor connects to an ESP32 over I²C and provides a moisture reading plus sensor temperature.</p>
+          <span class="flow-tag">ESP32 + STEMMA SOIL SENSOR</span>
+        </article>
+        <article class="flow-card">
+          <span class="flow-index">02</span>
+          <div class="flow-icon signal-icon" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+          <h3>Log</h3>
+          <p>Every ten minutes, the ESP32 timestamps the reading and sends it to Firebase. If a push fails, recent errors are saved locally for a retry.</p>
+          <span class="flow-tag">FIREBASE REALTIME DATABASE</span>
+        </article>
+        <article class="flow-card planned-card">
+          <span class="flow-index">03</span>
+          <div class="flow-icon pump-icon" aria-hidden="true"><span></span><span></span></div>
+          <h3>Water <span class="planned-label">PLANNED</span></h3>
+          <p>A small pump and driver circuit are planned. They will be added after the sensor data is calibrated, with control designed around clear moisture thresholds.</p>
+          <span class="flow-tag">PUMP CONTROL NOT CONNECTED YET</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="details-section section-wrap" id="details">
+      <div class="details-title">
+        <p class="eyebrow">BUILD NOTES <span class="section-number">03 / 03</span></p>
+        <h2>Small system.<br>Useful signals.</h2>
+      </div>
+      <div class="details-list">
+        <div class="detail-row"><span>Controller</span><strong>ESP32 development board</strong></div>
+        <div class="detail-row"><span>Sensor</span><strong>Capacitive soil sensor with seesaw interface</strong></div>
+        <div class="detail-row"><span>Sampling interval</span><strong>10 minutes</strong></div>
+        <div class="detail-row"><span>Data path</span><strong>ESP32 → Firebase → Go dashboard</strong></div>
+        <div class="detail-row"><span>Next milestone</span><strong>Calibrate readings, then add pump hardware</strong></div>
+        <a class="schematic-link" href="https://github.com/PeterGrunig/SelfWateringPlant/blob/main/esp32_self_watering_pot_schematic%20%281%29.png" target="_blank" rel="noreferrer">Open the wiring schematic <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="/">
+      <span class="brand-mark" aria-hidden="true">↗</span>
+      <span>FIELD NOTES <span class="brand-divider">/</span> 001</span>
+    </a>
+    <span>BUILT TO OBSERVE. DESIGNED TO GROW.</span>
+    <a href="https://github.com/PeterGrunig/SelfWateringPlant" target="_blank" rel="noreferrer">SOURCE ON GITHUB ↗</a>
+  </footer>
+</body>
+</html>
+{{- end}}
